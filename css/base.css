@@ -133,3 +133,10 @@ h1{
 	color: white;
     margin: 20px 0 10px 0;
 }
+
+.default-warning{
+	display: block;
+	font-size: 18px;
+	color: red;
+	margin: 10px 0;
+}
