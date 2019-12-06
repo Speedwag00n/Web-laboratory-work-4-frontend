@@ -1,0 +1,48 @@
+<!DOCTYPE html>
+<html lang="ru">
+
+<head>
+    <meta charset="utf-8" />
+    <title>Web-программирование, лабораторная работа #4</title>
+
+    <link rel="stylesheet" type="text/css" href="css/base.css">
+    <link rel="stylesheet" type="text/css" href="css/index.css">
+</head>
+
+<body>
+    <div id="app">
+        <div id="header">
+            <span id="author-name" class="header-left-element header-content">Неманков Илья Олегович</span>
+            <span id="author-group" class="header-center-element header-content">P3211</span>
+            <span id="lab-variant" class="header-rigth-element header-content">Вариант 6661313</span>
+        </div>
+        
+        <div v-show="login">
+            <h1>Авторизация</h1>
+            <login-form v-on:tabchange="changeTab"></login-form>
+        </div>
+    
+        <div v-show="!login">
+            <h1>Регистрация</h1>
+            <registration-form v-on:tabchange="changeTab"></registration-form>
+        </div>
+    </div>
+
+    <script src="https://unpkg.com/vue"></script>
+    <script src="js/auth-components.js"></script>
+    <script>
+        var app = new Vue({
+            el: '#app',
+            data: {
+                login: true
+            },
+            methods: {
+                changeTab: function(value) {
+                    this.login = value;
+                }
+            }
+        })
+    </script>
+</body>
+
+</html>
