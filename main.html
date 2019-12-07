@@ -6,27 +6,23 @@
     <title>Web-программирование, лабораторная работа #4</title>
 
     <link rel="stylesheet" type="text/css" href="css/base.css">
+    <link rel="stylesheet" type="text/css" href="css/main.css">
 </head>
 
 <body>
     <div id="app">
         <default-header></default-header>
-        <router-view></router-view>
     </div>
 
     <script src="https://unpkg.com/vue"></script>
-    <script src="https://unpkg.com/vue-router"></script>
     <script src="https://unpkg.com/vue-resource"></script>
-    <script src="js/auth-router.js"></script>
-    <script src="js/auth-components.js"></script>
     <script src="js/basic-components.js"></script>
     <script>
         var app = new Vue({
             el: '#app',
-            router: router,
             created: function() {
-                if (!localStorage.getItem('token') && router.history.current.path != '/' && router.history.current.path != '/register') {
-                    this.$router.push('/')
+                if (!localStorage.getItem('token')) {
+                    window.location.replace("./index.html")
                 }
             }
         })

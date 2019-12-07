@@ -24,10 +24,6 @@ const routes = [
                 </div>
                 ` 
         } 
-    },
-    {
-        path: '/main',
-        alias: '/main.html'
     }
 ]
   

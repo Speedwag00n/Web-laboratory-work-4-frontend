@@ -77,7 +77,7 @@ Vue.component(
                     (response) => {
                         this.status = ''
                         localStorage.setItem('token', response.bodyText)
-                        this.$router.push('/main')
+                        window.location.replace("main.html")
                      },
                     (error) => {
                         if (error.status == 403) {
@@ -159,7 +159,7 @@ Vue.component(
                     (response) => {
                         this.status = ''
                         localStorage.setItem('token', response.bodyText)
-                        this.$router.push('/main')
+                        window.location.replace("main.html")
                     },
                     (error) => {
                         if (error.status == 400) {
