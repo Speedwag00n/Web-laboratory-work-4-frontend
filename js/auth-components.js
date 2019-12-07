@@ -5,27 +5,31 @@ var authValidationMixin = {
             password: '',
             status: '',
 
-            localLogin: true,
-            localPassword: true
+            warningLogin: '',
+            warningPassword: ''
+        }
+    },
+    methods: {
+        generateLoginWarning: function() {
+            if (!this.login) {
+                return 'Логин должен быть указан'
+            }
+            if (this.login.length < 6) {
+                return 'Длина логина должна быть не менее 6 символов';
+            }
+            return ''
+        },
+        generatePasswordWarning: function() {
+            if (!this.password) {
+                return 'Пароль должен быть указан'
+            }
+            if (this.password.length < 6) {
+                return 'Длина пароля должна быть не менее 6 символов';
+            }
+            return ''
         }
     },
     computed: {
-        validLoginLenght: function() {
-            this.localLogin = this.login
-            if (this.login.length < 6) {
-                return false;
-            } else {
-                return true;
-            }
-        },
-        validPasswordLength: function() {
-            this.localPassword = this.password
-            if (this.password.length < 6) {
-                return false;
-            } else {
-                return true;
-            }
-        },
         isInProgress: function() {
             return this.status === 'InProgress'
         }
@@ -40,13 +44,11 @@ Vue.component(
             <form class="horizontal-centering-container">
                 <label class="default-label">Логин</label>
                 <input class="input-param" type="text" v-model="login" maxlength=16/>
-                <span v-show="!localLogin" class="default-warning">Логин должен быть указан</span>
-                <span v-show="login && !validLoginLenght" class="default-warning">Длина логина должна быть не менее 6 символов</span>
+                <span v-show="warningLogin" class="default-warning">{{ warningLogin }}</span>
 
                 <label class="default-label">Пароль</label>
                 <input class="input-param" type="password" v-model="password" maxlength=16/>
-                <span v-show="!localPassword" class="default-warning">Пароль должен быть указан</span>
-                <span v-show="password && !validPasswordLength" class="default-warning">Длина пароля должна быть не менее 6 символов</span>
+                <span v-show="warningPassword" class="default-warning">{{ warningPassword }}</span>
 
                 <div>
                     <button type="submit" class="submit-button" :disabled="isInProgress" v-on:click="doLogin">Авторизоваться</button>
@@ -60,12 +62,17 @@ Vue.component(
             </form>
             `,
 
+        data: function() {
+            return {
+                warningRequest: ''
+            }
+        },
         methods: {
             doLogin: function(e) {
                 e.preventDefault()
                 this.status = ''
-                
-                if (!this.validForm()) {
+
+                if (this.validateForm()) {
                     return
                 }
 
@@ -91,14 +98,10 @@ Vue.component(
                     }
                 )
             },
-            validForm: function() {
-                if (!this.login) {
-                    this.localLogin = false;
-                }
-                if (!this.password) {
-                    this.localPassword = false;
-                }
-                return this.validLoginLenght && this.validPasswordLength
+            validateForm: function() {
+                this.warningLogin = this.generateLoginWarning();
+                this.warningPassword = this.generatePasswordWarning();
+                return this.warningLogin || this.warningPassword;
             }
         },
         mixins: [authValidationMixin]
@@ -113,18 +116,15 @@ Vue.component(
             <form class="horizontal-centering-container">
                 <label class="default-label">Логин</label>
                 <input class="input-param" type="text" v-model="login" maxlength=16/>
-                <span v-show="!localLogin" class="default-warning">Логин должен быть указан</span>
-                <span v-show="login && !validLoginLenght" class="default-warning">Длина логина должна быть не менее 6 символов</span>
+                <span v-show="warningLogin" class="default-warning">{{ warningLogin }}</span>
 
                 <label class="default-label">Пароль</label>
                 <input class="input-param" type="password" v-model="password" maxlength=16/>
-                <span v-show="!localPassword" class="default-warning">Пароль должен быть указан</span>
-                <span v-show="password && !validPasswordLength" class="default-warning">Длина пароля должна быть не менее 6 символов</span>
+                <span v-show="warningPassword" class="default-warning">{{ warningPassword }}</span>
 
                 <label class="default-label">Подтвердите пароль</label>
                 <input class="input-param" type="password" v-model="confirmedPassword" maxlength=16/>
-                <span v-show="!localConfirmedPassword" class="default-warning">Необходимо потвердить пароль</span>
-                <span v-show="confirmedPassword && !passwordsMatch" class="default-warning">Пароли должны совпадать</span>
+                <span v-show="warningConfirmedPassword" class="default-warning">{{ warningConfirmedPassword }}</span>
 
                 <div>
                     <button type="submit" class="submit-button" :disabled="isInProgress" v-on:click="doRegistration">Зарегистрироваться</button>
@@ -142,13 +142,15 @@ Vue.component(
             return {
                 confirmedPassword: '',
 
-                localConfirmedPassword: true
+                warningConfirmedPassword: ''
             }
         },
         methods: {
             doRegistration: function(e) {
                 e.preventDefault()
-                if (!this.validForm()) {
+                this.status = ''
+
+                if (this.validateForm()) {
                     return
                 }
 
@@ -174,25 +176,22 @@ Vue.component(
                     }
                 )
             },
-            validForm: function() {
-                if (!this.login) {
-                    this.localLogin = false;
-                }
-                if (!this.password) {
-                    this.localPassword = false;
-                }
+            validateForm: function() {
+                this.warningLogin = this.generateLoginWarning();
+                this.warningPassword = this.generatePasswordWarning();
+                this.warningConfirmedPassword = this.generateConfirmedPassword();
+                return this.warningLogin || this.warningPassword || this.warningConfirmedPassword;
+            },
+            generateConfirmedPassword: function() {
                 if (!this.confirmedPassword) {
-                    this.localConfirmedPassword = false;
+                    return 'Необходимо подтвердить пароль'
                 }
-                return this.validLoginLenght && this.validPasswordLength && this.passwordsMatch
+                if (this.password !== this.confirmedPassword) {
+                    return 'Пароли должны совпадать';
+                }
+                return ''
             }
         },
-        mixins: [authValidationMixin],
-        computed: {
-            passwordsMatch: function() {
-                this.localConfirmedPassword = this.confirmedPassword
-                return this.password === this.confirmedPassword
-            }
-        }
+        mixins: [authValidationMixin]
     }
 );
