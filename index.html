@@ -28,6 +28,9 @@
                 if (!localStorage.getItem('token') && router.history.current.path != '/' && router.history.current.path != '/register') {
                     this.$router.push('/')
                 }
+                if (localStorage.getItem('token')) {
+                    window.location.replace("./main.html")
+                }
             }
         })
     </script>

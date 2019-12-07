@@ -1,0 +1,16 @@
+.task-chart,
+.task-chart-image,
+.chart-box {
+	width: 330px;
+	height: 330px;
+}
+
+.chart-box{
+	display: inline-block;
+	overflow: hidden;
+}
+
+.task-chart{
+	position: relative;
+	bottom: 100%;
+}

@@ -82,7 +82,7 @@ Vue.component(
                     (error) => {
                         if (error.status == 403) {
                             this.status = "Unauthorized";
-                        } else if (error.status >= 500) {
+                        } else {
                             this.status = "Unknown"
                         }
                     }
@@ -164,7 +164,7 @@ Vue.component(
                     (error) => {
                         if (error.status == 400) {
                             this.status = "LoginInUse";
-                        } else if (error.status >= 500) {
+                        } else {
                             this.status = "Unknown"
                         }
                     }
