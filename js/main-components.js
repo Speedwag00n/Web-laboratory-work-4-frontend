@@ -345,3 +345,49 @@ Vue.component(
         }
     }
 );
+
+Vue.component(
+    'result-table',
+    {
+        template: 
+            `
+                <div class="horizontal-centering-container">
+                    <h1>История результатов</h1>
+                    <table class="result-table">
+                        <tr>
+                            <th>X</th>
+                            <th>Y</th>
+                            <th>R</th>
+                            <th>Попадание</th>
+                            <th>Попадание (для текущего R)</th>
+                        </tr>
+                        <tr v-for="point in points">
+                            <td>{{ point.x }}</td>
+                            <td>{{ point.y }}</td>
+                            <td>{{ point.r }}</td>
+                            <td>{{ point.hit }}</td>
+                            <td>{{ point.hitNow }}</td>
+                        </tr>
+                    </table>
+                </div>
+            `,
+        data: function() {
+            return {
+                points: []
+            }
+        },
+        created: function() {
+            this.$http.get(
+                'http://localhost:8080/api/point?r=3',
+                {
+                    headers: {
+                        'Authorization': 'Bearer ' + localStorage.getItem('token')
+                    }
+                }
+            ).then(
+                (response) => { this.points = response.body },
+                (error) => { }
+            );
+        }
+    }
+);
