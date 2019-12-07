@@ -61,7 +61,10 @@ Vue.component(
             `,
 
         methods: {
-            doLogin: function() {
+            doLogin: function(e) {
+                e.preventDefault()
+                this.status = ''
+                
                 if (!this.validForm()) {
                     return
                 }
@@ -70,20 +73,20 @@ Vue.component(
                 this.$http.post(
                     'http://localhost:8080/api/login', 
                     {
-                        "login": this.login,
-                        "password": this.password,
+                        'login': this.login,
+                        'password': this.password,
                     },
                 ).then(
                     (response) => {
                         this.status = ''
                         localStorage.setItem('token', response.bodyText)
-                        window.location.replace("main.html")
+                        window.location.replace('main.html')
                      },
                     (error) => {
                         if (error.status == 403) {
-                            this.status = "Unauthorized";
+                            this.status = 'Unauthorized';
                         } else {
-                            this.status = "Unknown"
+                            this.status = 'Unknown'
                         }
                     }
                 )
@@ -143,7 +146,8 @@ Vue.component(
             }
         },
         methods: {
-            doRegistration: function() {
+            doRegistration: function(e) {
+                e.preventDefault()
                 if (!this.validForm()) {
                     return
                 }

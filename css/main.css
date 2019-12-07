@@ -5,12 +5,38 @@
 	height: 330px;
 }
 
-.chart-box{
+.chart-box {
 	display: inline-block;
 	overflow: hidden;
 }
 
-.task-chart{
+.task-chart {
 	position: relative;
 	bottom: 100%;
+}
+
+.parameter-container, .button-container {
+    margin-bottom: 10px;
+    padding: 0px 8px 8px 8px;
+}
+
+.parameter-header {
+    display: block;
+    font-size: 20px;
+    font-weight: bold;
+    margin: 0 auto 1% auto;
+}
+
+.parameter-label {
+    font-size: 20px;
+    width: 100px;
+}
+
+.workspace-item-container {
+    font-family: monospace;
+	color: white;
+}
+
+.parameter-form {
+    text-align: center;
 }

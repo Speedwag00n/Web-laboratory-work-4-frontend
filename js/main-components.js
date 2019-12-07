@@ -140,16 +140,15 @@ Vue.component(
                     'http://localhost:8080/api/point?r=' + r,
                     {
                         headers: {
-                            "Authorization": 'Bearer ' + localStorage.getItem('token')
+                            'Authorization': 'Bearer ' + localStorage.getItem('token')
                         }
                     }
                 ).then(
                     (response) => {
-
                         for (index in response.body) {
                             context.beginPath();
-                            context.strokeStyle = response.body[index].hit ? "green" : "red";
-                            context.fillStyle = response.body[index].hit ? "green" : "red";
+                            context.strokeStyle = response.body[index].hit ? 'green' : 'red';
+                            context.fillStyle = response.body[index].hit ? 'green' : 'red';
 
                             context.arc(this.toOriginalX(response.body[index].x, r), this.toOriginalY(response.body[index].y, r), r, 0, 2 * Math.PI);
                             context.closePath();
@@ -202,6 +201,147 @@ Vue.component(
             this.$refs.canvas.height = this.$refs.canvas.offsetHeight;
             
             this.draw();
+        }
+    }
+);
+
+Vue.component(
+    'point-form',
+    {
+        template: 
+            `
+            <div class="workspace-item-container">
+                <h1>Параметры</h1>
+                <form class="parameter-form">
+                    <label class="parameter-header">X:</label>
+                    <div class="parameter-container">
+                        <label class="parameter-label">-5</label>
+                        <input type="radio" value="-5" v-model="x">
+
+                        <label class="parameter-label">-4</label>
+                        <input type="radio" value="-4" v-model="x">
+
+                        <label class="parameter-label">-3</label>
+                        <input type="radio" value="-3" v-model="x">
+
+                        <label class="parameter-label">-2</label>
+                        <input type="radio" value="-2" v-model="x">
+
+                        <label class="parameter-label">-1</label>
+                        <input type="radio" value="-1" v-model="x">
+
+                        <label class="parameter-label">0</label>
+                        <input type="radio" value="0" v-model="x">
+
+                        <label class="parameter-label">1</label>
+                        <input type="radio" value="1" v-model="x">
+
+                        <label class="parameter-label">2</label>
+                        <input type="radio" value="2" v-model="x">
+
+                        <label class="parameter-label">3</label>
+                        <input type="radio" value="3" v-model="x">
+                    </div>
+                    <span v-show="warningX" class="default-warning">{{ warningX }}</span>
+
+                    <label class="parameter-header">Y:</label>
+                    <div class="parameter-container">
+                        <input type="text" placeholder="(-5 ... 5)" maxlength="10" v-model="y">
+                    </div>
+                    <span v-show="warningY" class="default-warning">{{ warningY }}</span>
+
+                    <label class="parameter-header">R:</label>
+                    <div class="parameter-container">
+                        <label class="parameter-label">1</label>
+                        <input type="radio" value="1" v-model="r">
+
+                        <label class="parameter-label">2</label>
+                        <input type="radio" value="2" v-model="r">
+
+                        <label class="parameter-label">3</label>
+                        <input type="radio" value="3" v-model="r">
+                    </div>
+                    <span v-show="warningR" class="default-warning">{{ warningR }}</span>
+
+                    <div class="horisontal-centering-container button-container">
+                        <button type="submit" class="submit-button" v-on:click="sendPoint">Отправить</button>
+                        <span v-show="status === 'Unknown'" class="default-warning">Произошла неизвестная ошибка, попробуйте отправить запрос позже</span>
+                    </div>
+                </form>
+            </div>
+            `,
+
+        data: function() {
+            return {
+                x: '',
+                y: '',
+                r: '',
+
+                warningX: '',
+                warningY: '',
+                warningR: '',
+
+                status: ''
+            }
+        },
+        methods: {
+            sendPoint: function(e) {
+                e.preventDefault()
+                this.status = ''
+                if (this.validateForm()) {
+                    return
+                }
+                this.$http.post(
+                    'http://localhost:8080/api/point', 
+                    {
+                        'x': this.x,
+                        'y': this.y,
+                        'r': this.r
+                    },
+                    {
+                        headers: {
+                            'Authorization': 'Bearer ' + localStorage.getItem('token')
+                        }
+                    }
+                ).then(
+                    (response) => {
+                        //draw new point
+                    },
+                    (error) => {
+                        this.status = 'Unknown'
+                    }
+                )
+            },
+            validateForm: function() {
+                this.warningX = this.generateWarningX();
+                this.warningY = this.generateWarningY();
+                this.warningR = this.generateWarningR();
+                return this.warningX || this.warningY || this.warningR;
+            },
+            generateWarningX: function() {
+                if (!this.x) {
+                    return 'X должен быть указан'
+                }
+                return ''
+            },
+            generateWarningY: function() {
+                if (!this.y) {
+                    return 'Y должен быть указан'
+                }
+                if (!(!isNaN( Number(this.y) ) && this.y.lastIndexOf('.') != (this.y.length - 1))) {
+                    return 'Y должен быть числом'
+                }
+                if (!(this.y > -5 && this.y < 5)) {
+                    return 'Y должен быть в диапазоне (-5 ... 5)'
+                }
+                return ''
+            },
+            generateWarningR: function() {
+                if (!this.r) {
+                    return 'R должен быть указан'
+                }
+                return ''
+            }
         }
     }
 );
