@@ -1,6 +1,17 @@
 var authValidationMixin = {
+    data: function() {
+        return {
+            login: '',
+            password: '',
+            status: '',
+
+            localLogin: true,
+            localPassword: true
+        }
+    },
     computed: {
         validLoginLenght: function() {
+            this.localLogin = this.login
             if (this.login.length < 6) {
                 return false;
             } else {
@@ -8,11 +19,15 @@ var authValidationMixin = {
             }
         },
         validPasswordLength: function() {
+            this.localPassword = this.password
             if (this.password.length < 6) {
                 return false;
             } else {
                 return true;
             }
+        },
+        isInProgress: function() {
+            return this.status === 'InProgress'
         }
     }
 }
@@ -22,29 +37,65 @@ Vue.component(
     {
         template: 
             `
-            <div class="horizontal-centering-container">
+            <form class="horizontal-centering-container">
                 <label class="default-label">Логин</label>
-                <input class="input-param" type="text" v-model.lazy="login"/>
+                <input class="input-param" type="text" v-model="login" maxlength=16/>
+                <span v-show="!localLogin" class="default-warning">Логин должен быть указан</span>
                 <span v-show="login && !validLoginLenght" class="default-warning">Длина логина должна быть не менее 6 символов</span>
+
                 <label class="default-label">Пароль</label>
-                <input class="input-param" type="password" v-model.lazy="password"/>
+                <input class="input-param" type="password" v-model="password" maxlength=16/>
+                <span v-show="!localPassword" class="default-warning">Пароль должен быть указан</span>
                 <span v-show="password && !validPasswordLength" class="default-warning">Длина пароля должна быть не менее 6 символов</span>
+
                 <div>
-                    <button class="submit-button">Авторизоваться</button>
+                    <button type="submit" class="submit-button" :disabled="isInProgress" v-on:click="doLogin">Авторизоваться</button>
                 </div>
-                <a class="default-link" v-on:click="onTabChange">Создать новый аккаунт</a>
-            </div>
+
+                <span v-show="isInProgress" class="default-hint">Подождите, запрос обрабатывается</span>
+                <span v-show="status === 'Unauthorized'" class="default-warning">Пользователь с такими данными не найден</span>
+                <span v-show="status === 'Unknown'" class="default-warning">Произошла неизвестная ошибка, попробуйте отправить запрос позже</span>
+
+                <router-link class="default-link" to="/register">Создать новый аккаунт</router-link>
+            </form>
             `,
 
-        data: function() {
-            return {
-                login: '',
-                password: ''
-            }
-        },
         methods: {
-            onTabChange: function() {
-                this.$emit('tabchange', false);
+            doLogin: function() {
+                if (!this.validForm()) {
+                    return
+                }
+
+                this.status = 'InProgress'
+                this.$http.post(
+                    'http://localhost:8080/api/login', 
+                    {
+                        "login": this.login,
+                        "password": this.password,
+                    },
+                ).then(
+                    (response) => {
+                        this.status = ''
+                        localStorage.setItem('token', response.bodyText)
+                        this.$router.push('/main')
+                     },
+                    (error) => {
+                        if (error.status == 403) {
+                            this.status = "Unauthorized";
+                        } else if (error.status >= 500) {
+                            this.status = "Unknown"
+                        }
+                    }
+                )
+            },
+            validForm: function() {
+                if (!this.login) {
+                    this.localLogin = false;
+                }
+                if (!this.password) {
+                    this.localPassword = false;
+                }
+                return this.validLoginLenght && this.validPasswordLength
             }
         },
         mixins: [authValidationMixin]
@@ -56,38 +107,86 @@ Vue.component(
     {
         template: 
             `
-            <div class="horizontal-centering-container">
+            <form class="horizontal-centering-container">
                 <label class="default-label">Логин</label>
-                <input class="input-param" type="text" v-model.lazy="login"/>
+                <input class="input-param" type="text" v-model="login" maxlength=16/>
+                <span v-show="!localLogin" class="default-warning">Логин должен быть указан</span>
                 <span v-show="login && !validLoginLenght" class="default-warning">Длина логина должна быть не менее 6 символов</span>
+
                 <label class="default-label">Пароль</label>
-                <input class="input-param" type="password" v-model.lazy="password"/>
+                <input class="input-param" type="password" v-model="password" maxlength=16/>
+                <span v-show="!localPassword" class="default-warning">Пароль должен быть указан</span>
                 <span v-show="password && !validPasswordLength" class="default-warning">Длина пароля должна быть не менее 6 символов</span>
+
                 <label class="default-label">Подтвердите пароль</label>
-                <input class="input-param" type="password" v-model.lazy="confirmedPassword"/>
+                <input class="input-param" type="password" v-model="confirmedPassword" maxlength=16/>
+                <span v-show="!localConfirmedPassword" class="default-warning">Необходимо потвердить пароль</span>
                 <span v-show="confirmedPassword && !passwordsMatch" class="default-warning">Пароли должны совпадать</span>
+
                 <div>
-                    <button class="submit-button">Зарегистрироваться</button>
+                    <button type="submit" class="submit-button" :disabled="isInProgress" v-on:click="doRegistration">Зарегистрироваться</button>
                 </div>
-                <a class="default-link" v-on:click="onTabChange">Войти, используя существующий аккаунт</a>
-            </div>
+
+                <span v-show="isInProgress" class="default-hint">Подождите, запрос обрабатывается</span>
+                <span v-show="status === 'LoginInUse'" class="default-warning">Введенный логин уже используется</span>
+                <span v-show="status === 'Unknown'" class="default-warning">Произошла неизвестная ошибка, попробуйте отправить запрос позже</span>
+
+                <router-link class="default-link" to="/">Войти, используя существующий аккаунт</router-link>
+            </form>
             `,
 
         data: function() {
             return {
-                login: '',
-                password: '',
-                confirmedPassword: ''
+                confirmedPassword: '',
+
+                localConfirmedPassword: true
             }
         },
         methods: {
-            onTabChange: function() {
-                this.$emit('tabchange', true);
+            doRegistration: function() {
+                if (!this.validForm()) {
+                    return
+                }
+
+                this.status = 'InProgress'
+                this.$http.post(
+                    'http://localhost:8080/api/user', 
+                    {
+                        "login": this.login,
+                        "password": this.password
+                    },
+                ).then(
+                    (response) => {
+                        this.status = ''
+                        localStorage.setItem('token', response.bodyText)
+                        this.$router.push('/main')
+                    },
+                    (error) => {
+                        if (error.status == 400) {
+                            this.status = "LoginInUse";
+                        } else if (error.status >= 500) {
+                            this.status = "Unknown"
+                        }
+                    }
+                )
+            },
+            validForm: function() {
+                if (!this.login) {
+                    this.localLogin = false;
+                }
+                if (!this.password) {
+                    this.localPassword = false;
+                }
+                if (!this.confirmedPassword) {
+                    this.localConfirmedPassword = false;
+                }
+                return this.validLoginLenght && this.validPasswordLength && this.passwordsMatch
             }
         },
         mixins: [authValidationMixin],
         computed: {
             passwordsMatch: function() {
+                this.localConfirmedPassword = this.confirmedPassword
                 return this.password === this.confirmedPassword
             }
         }
