@@ -27,6 +27,9 @@ var authValidationMixin = {
                 return 'Длина пароля должна быть не менее 6 символов';
             }
             return ''
+        },
+        onTabChange: function(newTab) {
+            this.$emit('tabchange', newTab);
         }
     },
     computed: {
@@ -41,25 +44,28 @@ Vue.component(
     {
         template: 
             `
-            <form class="horizontal-centering-container">
-                <label class="default-label">Логин</label>
-                <input class="input-param" type="text" v-model="login" maxlength=16/>
-                <span v-show="warningLogin" class="default-warning">{{ warningLogin }}</span>
+            <div>
+                <h1>Авторизация</h1>
+                <form class="horizontal-centering-container">
+                    <label class="default-label">Логин</label>
+                    <input class="input-param" type="text" v-model="login" maxlength=16/>
+                    <span v-show="warningLogin" class="default-warning">{{ warningLogin }}</span>
 
-                <label class="default-label">Пароль</label>
-                <input class="input-param" type="password" v-model="password" maxlength=16/>
-                <span v-show="warningPassword" class="default-warning">{{ warningPassword }}</span>
+                    <label class="default-label">Пароль</label>
+                    <input class="input-param" type="password" v-model="password" maxlength=16/>
+                    <span v-show="warningPassword" class="default-warning">{{ warningPassword }}</span>
 
-                <div>
-                    <button type="submit" class="submit-button" :disabled="isInProgress" v-on:click="doLogin">Авторизоваться</button>
-                </div>
+                    <div>
+                        <button type="submit" class="submit-button" :disabled="isInProgress" v-on:click="doLogin">Авторизоваться</button>
+                    </div>
 
-                <span v-show="isInProgress" class="default-hint">Подождите, запрос обрабатывается</span>
-                <span v-show="status === 'Unauthorized'" class="default-warning">Пользователь с такими данными не найден</span>
-                <span v-show="status === 'Unknown'" class="default-warning">Произошла неизвестная ошибка, попробуйте отправить запрос позже</span>
+                    <span v-show="isInProgress" class="default-hint">Подождите, запрос обрабатывается</span>
+                    <span v-show="status === 'Unauthorized'" class="default-warning">Пользователь с такими данными не найден</span>
+                    <span v-show="status === 'Unknown'" class="default-warning">Произошла неизвестная ошибка, попробуйте отправить запрос позже</span>
 
-                <router-link class="default-link" to="/register">Создать новый аккаунт</router-link>
-            </form>
+                    <a class="default-link" v-on:click="onTabChange('Registration')">Создать новый аккаунт</a>
+                </form>
+            </div>
             `,
 
         data: function() {
@@ -113,29 +119,32 @@ Vue.component(
     {
         template: 
             `
-            <form class="horizontal-centering-container">
-                <label class="default-label">Логин</label>
-                <input class="input-param" type="text" v-model="login" maxlength=16/>
-                <span v-show="warningLogin" class="default-warning">{{ warningLogin }}</span>
+            <div>
+                <h1>Регистрация</h1>
+                <form class="horizontal-centering-container">
+                    <label class="default-label">Логин</label>
+                    <input class="input-param" type="text" v-model="login" maxlength=16/>
+                    <span v-show="warningLogin" class="default-warning">{{ warningLogin }}</span>
 
-                <label class="default-label">Пароль</label>
-                <input class="input-param" type="password" v-model="password" maxlength=16/>
-                <span v-show="warningPassword" class="default-warning">{{ warningPassword }}</span>
+                    <label class="default-label">Пароль</label>
+                    <input class="input-param" type="password" v-model="password" maxlength=16/>
+                    <span v-show="warningPassword" class="default-warning">{{ warningPassword }}</span>
 
-                <label class="default-label">Подтвердите пароль</label>
-                <input class="input-param" type="password" v-model="confirmedPassword" maxlength=16/>
-                <span v-show="warningConfirmedPassword" class="default-warning">{{ warningConfirmedPassword }}</span>
+                    <label class="default-label">Подтвердите пароль</label>
+                    <input class="input-param" type="password" v-model="confirmedPassword" maxlength=16/>
+                    <span v-show="warningConfirmedPassword" class="default-warning">{{ warningConfirmedPassword }}</span>
 
-                <div>
-                    <button type="submit" class="submit-button" :disabled="isInProgress" v-on:click="doRegistration">Зарегистрироваться</button>
-                </div>
+                    <div>
+                        <button type="submit" class="submit-button" :disabled="isInProgress" v-on:click="doRegistration">Зарегистрироваться</button>
+                    </div>
 
-                <span v-show="isInProgress" class="default-hint">Подождите, запрос обрабатывается</span>
-                <span v-show="status === 'LoginInUse'" class="default-warning">Введенный логин уже используется</span>
-                <span v-show="status === 'Unknown'" class="default-warning">Произошла неизвестная ошибка, попробуйте отправить запрос позже</span>
+                    <span v-show="isInProgress" class="default-hint">Подождите, запрос обрабатывается</span>
+                    <span v-show="status === 'LoginInUse'" class="default-warning">Введенный логин уже используется</span>
+                    <span v-show="status === 'Unknown'" class="default-warning">Произошла неизвестная ошибка, попробуйте отправить запрос позже</span>
 
-                <router-link class="default-link" to="/">Войти, используя существующий аккаунт</router-link>
-            </form>
+                    <a class="default-link" v-on:click="onTabChange('Login')">Войти, используя существующий аккаунт</a>
+                </form>
+            </div>
             `,
 
         data: function() {

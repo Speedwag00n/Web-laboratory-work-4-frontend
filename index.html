@@ -11,23 +11,28 @@
 <body>
     <div id="app">
         <default-header></default-header>
-        <router-view></router-view>
+        
+        <login-form v-show="currentTab === 'Login'" v-on:tabchange="changeTab"></login-form>
+
+        <registration-form v-show="currentTab === 'Registration'" v-on:tabchange="changeTab"></registration-form>
     </div>
 
     <script src="https://unpkg.com/vue"></script>
-    <script src="https://unpkg.com/vue-router"></script>
     <script src="https://unpkg.com/vue-resource"></script>
-    <script src="js/auth-router.js"></script>
     <script src="js/auth-components.js"></script>
     <script src="js/basic-components.js"></script>
     <script>
         var app = new Vue({
             el: '#app',
-            router: router,
-            created: function() {
-                if (!localStorage.getItem('token') && router.history.current.path != '/' && router.history.current.path != '/register') {
-                    this.$router.push('/')
+            data: {
+                currentTab: 'Login'
+            },
+            methods: {
+                changeTab: function(newTab) {
+                    this.currentTab = newTab;
                 }
+            },
+            created: function() {
                 if (localStorage.getItem('token')) {
                     window.location.replace("./main.html")
                 }
