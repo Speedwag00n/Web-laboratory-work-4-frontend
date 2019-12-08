@@ -405,12 +405,12 @@ Vue.component(
                             <th>Попадание</th>
                             <th>Попадание (для текущего R)</th>
                         </tr>
-                        <tr v-for="point in points">
+                        <tr v-for="point in points.slice().reverse()">
                             <td>{{ point.x }}</td>
                             <td>{{ point.y }}</td>
                             <td>{{ point.r }}</td>
-                            <td>{{ point.hit }}</td>
-                            <td>{{ point.hitNow }}</td>
+                            <td>{{ point.hit ? 'Да' : 'Нет' }}</td>
+                            <td>{{ point.hitNow ? 'Да' : 'Нет' }}</td>
                         </tr>
                     </table>
                 </div>
