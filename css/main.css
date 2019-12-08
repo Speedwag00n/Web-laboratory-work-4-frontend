@@ -1,26 +1,20 @@
-.task-chart {
-	width: 330px;
-	height: 330px;
-}
-
-.parameter-container, .button-container {
-    margin-bottom: 10px;
-    padding: 0px 8px 8px 8px;
-}
-
 .parameter-header {
     display: block;
     font-size: 20px;
     font-weight: bold;
-    margin: 0 auto;
-}
-
-.parameter-label {
-    font-size: 20px;
+	margin: 0 auto;
+	margin: 10px 0;
 }
 
 .parameter-form {
-    text-align: center;
+	text-align: center;
+	border: 2px solid black;
+
+	-webkit-border-radius: 5px;
+	-moz-border-radius: 5px;
+	-ms-border-radius: 5px;
+	-o-border-radius: 5px;
+	border-radius: 5px;
 }
 
 .result-table{
@@ -28,8 +22,6 @@
 	border-collapse: collapse;
 	font-family: monospace;
 	color: white;
-	font-size: 18px;
-	margin: 20px 0;
 }
 
 .result-table th,
@@ -39,8 +31,6 @@
 	border: none;
 	border: 2px solid black;
 	vertical-align: middle;
-	padding: 5px 10px;
-	min-width: 150px;
 	text-align: center;
 }
 
@@ -52,11 +42,5 @@
 	font-family: monospace;
 	color: white;
 	display: inline-block;
-	width: calc(50% - 40px);
-	margin: 0px 20px 10px 20px;
 	vertical-align: top;
-}
-
-input[type="radio"]:not(:last-child){
-	margin-right: 10px;
 }

@@ -1,0 +1,120 @@
+@media (min-width: 1220px) {
+    .task-chart {
+        width: 400px;
+        height: 400px;
+    }
+    
+    .parameter-container, .button-container {
+        padding: 0 10px 20px 10px;
+    }
+
+    .parameter-label {
+        font-size: 20px;
+    }
+
+    .parameter-form {
+        padding: 10px 5px 0px 5px;
+    }
+
+    .result-table{
+        font-size: 18px;
+        margin: 20px 10px;
+    }
+
+    .result-table th,
+    .result-table td{
+        padding: 5px 10px;
+        min-width: 150px;
+    }
+
+    .workspace-item-container{
+        width: calc(50% - 40px);
+        margin: 0px 20px 10px 20px;
+    }
+
+    input[type="radio"]:not(:last-child){
+        margin-right: 10px;
+    }
+}
+
+
+
+@media (min-width: 685px) and (max-width: 1219px) {
+    .task-chart {
+        width: 350px;
+        height: 350px;
+    }
+    
+    .parameter-container, .button-container {
+        padding: 0 8px 15px 8px;
+    }
+
+    .parameter-label {
+        font-size: 18px;
+    }
+
+    .parameter-form {
+        padding: 8px 5px 0px 5px;
+    }
+
+    .result-table{
+        font-size: 16px;
+        margin: 10px 5px;
+    }
+
+    .result-table th,
+    .result-table td{
+        padding: 5px 8px;
+        min-width: 75px;
+    }
+
+    .workspace-item-container{
+        width: calc(100% - 40px);
+        margin: 0px 20px 10px 20px;
+    }
+
+    input[type="radio"]:not(:last-child){
+        margin-right: 8px;
+    }
+}
+
+
+
+@media (max-width: 685px) {
+    .task-chart {
+        width: 300px;
+        height: 300px;
+    }
+    
+    .parameter-container, .button-container {
+        padding: 0 5px 10px 5px;
+    }
+
+    .parameter-label {
+        font-size: 16px;
+    }
+
+    .parameter-form {
+        padding: 5px 3px 0px 3px;
+    }
+
+    .result-table{
+        font-size: 14px;
+        margin: 8px 3px;
+    }
+
+    .result-table th,
+    .result-table td{
+        padding: 3px 5px;
+        min-width: 50px;
+    }
+
+    .workspace-item-container{
+        width: calc(100% - 30px);
+        margin: 0px 15px 8px 15px;
+    }
+
+    input[type="radio"]:not(:last-child){
+        margin-right: 5px;
+    }
+}

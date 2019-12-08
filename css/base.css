@@ -10,26 +10,14 @@ body{
 }
 
 #header{
-    height: 50px;
     font-family: monospace;
     color: white;
-    font-size: 18px;
     text-align: center;
 }
 
-.header-content{
-    width: 300px;
-    line-height: 50px;
-}
-
 #app > div{
-    width: 65%;
-    max-width: 1200px;
-    min-width: 1050px;
-
     margin-left: auto;
     margin-right: auto;
-    margin-top: 50px;
 
     background: #777777;
     background: -webkit-linear-gradient(45deg, #777777, #5B5B5B, #777777);
@@ -47,10 +35,6 @@ body{
     border-radius: 10px;
 }
 
-body > div:last-of-type{
-    margin-bottom: 50px;
-}
-
 .horizontal-centering-container{
     text-align: center;
 }
@@ -63,7 +47,6 @@ div span{
 }
 
 .header-left-element{
-    padding-left: 20px;
     text-align: left;
     float: left;
 }
@@ -73,18 +56,16 @@ div span{
 }
 
 .header-rigth-element{
-    padding-right: 20px;
     text-align: right;
     float: right;
 }
 
 div h1{
     text-align: center;
-    margin: 10px 0px 10px 0px;
-    font-size: 30px;
 }
 
 h1{
+    margin: 10px 0px 10px 0px;
     font-family: monospace;
     color: white;
 }
@@ -93,7 +74,6 @@ h1{
     font-family: monospace;
     color: white;
     display: block;
-    font-size: 24px;
     font-weight: bold;
     margin: 0 auto;
 }
@@ -101,10 +81,8 @@ h1{
 .submit-button{
     font-family: monospace;
     color: white;
-    font-size: 24px;
     background-color: #4C4C4C;
     border: 2px solid white;
-    margin: 10px 0;
 }
 
 .submit-button:hover{
@@ -114,32 +92,20 @@ h1{
     transition: 0.3s;
 }
 
-.input-param{
-    width: 400px;
-    font-size: 20px;
-    margin: 10px 0;
-}
-
 .default-link{
     display: block;
     text-align: center;
     text-decoration: underline;
-	font-size: 18px;
     font-family: monospace;
 	color: white;
-    margin: 20px 0 10px 0;
 }
 
 .default-warning{
 	display: block;
-	font-size: 18px;
 	color: red;
-	margin: 10px 0;
 }
 
 .default-hint{
     display: block;
-	font-size: 18px;
 	color: white;
-	margin: 10px 0;
 }

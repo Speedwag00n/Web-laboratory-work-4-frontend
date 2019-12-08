@@ -1,0 +1,198 @@
+@media (min-width: 1220px) {
+    #header {
+        height: 50px;
+        font-size: 18px;
+    }
+
+    .header-content{
+        width: 300px;
+        line-height: 50px;
+    }
+
+    #app > div {
+        width: 65%;
+        max-width: 1200px;
+        min-width: 1050px;
+        margin-top: 50px;
+    }
+
+    body > div:last-of-type{
+        margin-bottom: 50px;
+    }
+
+    .header-left-element{
+        padding-left: 20px;
+    }
+
+    .header-rigth-element{
+        padding-right: 20px;
+    }
+
+    div h1{
+        font-size: 30px;
+    }
+
+    .default-label{
+        font-size: 24px;
+    }
+    
+    .submit-button{
+        font-size: 24px;
+        margin: 40px 0 20px 0;
+    }
+    
+    .input-param{
+        width: 400px;
+        font-size: 20px;
+        margin: 10px 0;
+    }
+    
+    .default-link{
+        font-size: 18px;
+        margin: 20px 0 10px 0;
+    }
+    
+    .default-warning{
+        font-size: 18px;
+        margin: 10px 0;
+    }
+    
+    .default-hint{
+        font-size: 18px;
+        margin: 10px 0;
+    }
+}
+
+
+
+@media (min-width: 685px) and (max-width: 1219px) {
+    #header {
+        height: 40px;
+        font-size: 16px;
+    }
+
+    .header-content{
+        width: 250px;
+        line-height: 40px;
+    }
+
+    #app > div {
+        width: 80%;
+        max-width: 950px;
+        min-width: 600px;
+        margin-top: 30px;
+    }
+
+    body > div:last-of-type{
+        margin-bottom: 30px;
+    }
+
+    .header-left-element{
+        padding-left: 15px;
+    }
+
+    .header-rigth-element{
+        padding-right: 15px;
+    }
+
+    div h1{
+        font-size: 26px;
+    }
+
+    .default-label{
+        font-size: 22px;
+    }
+    
+    .submit-button{
+        font-size: 22px;
+        margin: 30px 0 15px 0;
+    }
+    
+    .input-param{
+        width: 300px;
+        font-size: 18px;
+        margin: 8px 0;
+    }
+    
+    .default-link{
+        font-size: 16px;
+        margin: 15px 0 8px 0;
+    }
+    
+    .default-warning{
+        font-size: 16px;
+        margin: 8px 0;
+    }
+    
+    .default-hint{
+        font-size: 16px;
+        margin: 8px 0;
+    }
+}
+
+
+
+@media (max-width: 685px) {
+    #header {
+        height: 30px;
+        font-size: 11px;
+    }
+
+    .header-content{
+        width: 175px;
+        line-height: 30px;
+    }
+
+    #app > div {
+        width: 85%;
+        max-width: 600px;
+        min-width: 450px;
+        margin-top: 20px;
+    }
+
+    body > div:last-of-type{
+        margin-bottom: 20px;
+    }
+
+    .header-left-element{
+        padding-left: 10px;
+    }
+
+    .header-rigth-element{
+        padding-right: 10px;
+    }
+
+    div h1{
+        font-size: 24px;
+    }
+
+    .default-label{
+        font-size: 20px;
+    }
+    
+    .submit-button{
+        font-size: 16px;
+        margin: 20px 0 10px 0;
+    }
+    
+    .input-param{
+        width: 300px;
+        font-size: 16px;
+        margin: 5px 0;
+    }
+    
+    .default-link{
+        font-size: 14px;
+        margin: 10px 0 5px 0;
+    }
+    
+    .default-warning{
+        font-size: 14px;
+        margin: 5px 0;
+    }
+    
+    .default-hint{
+        font-size: 14px;
+        margin: 5px 0;
+    }
+}

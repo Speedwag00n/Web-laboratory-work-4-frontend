@@ -242,7 +242,9 @@ Vue.component(
             },
 
             redraw: function(r, points) {
-                this.points = points;
+                if (points != null) {
+                    this.points = points;
+                }
                 this.clear();
                 this.draw(r);
             },
@@ -264,6 +266,22 @@ Vue.component(
 
                 this.$emit('addpoint', { x: x, y: y, r: r });
             }
+        },
+        mounted: function() {
+            let canvas = this.$refs.canvas;
+            let redraw = this.redraw;
+            let object = this;
+            window.addEventListener('resize', function() {
+                if (canvas.width != canvas.offsetWidth || canvas.height != canvas.offsetHeight) {
+                    canvas.width = canvas.offsetWidth;
+                    canvas.height = canvas.offsetHeight;
+                    if (!object.currentR) {
+                        redraw(3);
+                    } else {
+                        redraw(object.currentR);
+                    }
+                }
+            });
         }
     }
 );
