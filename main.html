@@ -13,7 +13,7 @@
     <div id="app">
         <default-header></default-header>
         
-        <div>
+        <div id="workspace-container">
             <task-chart ref="chart" v-on:addpoint="addPoint" v-bind:current-r="currentR"></task-chart>
             <point-form v-on:rchanged="rChanged" v-on:addpoint="addPoint"></point-form>
             <a class="default-link" v-on:click="logout">Вернуться на страницу авторизации</a>

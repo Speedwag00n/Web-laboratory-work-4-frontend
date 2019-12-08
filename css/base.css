@@ -11,8 +11,8 @@ body{
 
 #header{
     height: 50px;
-    font-family: monospace !important;
-    color: white !important;
+    font-family: monospace;
+    color: white;
     font-size: 18px;
     text-align: center;
 }
@@ -47,12 +47,8 @@ body{
     border-radius: 10px;
 }
 
-body > div:first-child{
-    margin-top: 20px;
-}
-
-body > div:last-child{
-    margin-bottom: 20px;
+body > div:last-of-type{
+    margin-bottom: 50px;
 }
 
 .horizontal-centering-container{
