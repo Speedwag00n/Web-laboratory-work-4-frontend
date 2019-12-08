@@ -6,14 +6,13 @@ Vue.component(
             <div class="workspace-item-container">
                 <h1>Область</h1>
                 <div class="horizontal-centering-container">
-                    <div class="chart-box">
-                        <img class="task-chart-image" :src="image">
-                        <canvas ref="canvas" class="task-chart"></canvas>
-                    </div>
-                    <span class="default-warning">Выберите радиус</span>
+                    <canvas ref="canvas" class="task-chart" v-on:click="addPoint"></canvas>
+                    <span v-show="warningR" class="default-warning">{{ warningR }}</span>
                 </div>
             </div>
             `,
+        
+        props: ["currentR"],
         data: function() {
             return {
                 image: './img/chart-image.png',
@@ -23,18 +22,60 @@ Vue.component(
                 pointScale: 3,
                 signSpace: 9,
                 pointRadius: 1.5,
-                axisesColor: "black",
-                signsColor: "black",
-                signsFont: "14px monospace",
-                rCoefficient: 0.4
+                axisesColor: 'black',
+                signsColor: 'black',
+                signsFont: '14px monospace',
+                backgroundColor: "white",
+                regionColor: "#3399FF",
+                rCoefficient: 0.4,
+
+                points: [],
+                warningR: ''
             }
         },
         methods: {
-            draw: function() {
+            draw: function(r) {
+                this.drawBackground();
+                this.drawArea();
                 this.drawAxises();
                 this.drawAxisesSigns();
-                this.drawPointsSigns(3);
-                this.drawPoints(3);                
+                this.drawPointsSigns(r);
+                this.drawPoints(r);                
+            },
+
+             drawBackground: function() {
+                let canvas = this.$refs.canvas;
+                let context = canvas.getContext("2d");
+                context.fillStyle = this.backgroundColor;
+            
+                context.fillRect(0, 0, canvas.width, canvas.height);
+            },
+
+             drawArea: function() {
+                let canvas = this.$refs.canvas;
+                let context = canvas.getContext("2d");
+                context.strokeStyle = this.regionColor;
+                context.fillStyle = this.regionColor;
+            
+                context.beginPath();
+            
+                context.moveTo(canvas.width / 2, canvas.height * 0.7);
+
+                context.arc(canvas.width / 2, canvas.height / 2, canvas.width * 0.2, 3/2 * Math.PI, 2 * Math.PI);
+
+                context.lineTo(canvas.width / 2, canvas.height / 2);
+            
+                context.lineTo(canvas.width / 2, canvas.height * 0.9);
+                context.lineTo(canvas.width * 0.3, canvas.height * 0.9);
+                context.lineTo(canvas.width * 0.3, canvas.height / 2);
+
+                context.lineTo(canvas.width / 2, canvas.height * 0.1);
+                context.lineTo(canvas.width / 2, canvas.height * 0.3);
+            
+            
+                context.closePath();
+                context.fill();
+                context.stroke();
             },
 
             drawAxises: function() {
@@ -133,31 +174,28 @@ Vue.component(
             },
 
             drawPoints: function(r) {
+                for (index in this.points) {
+                    this.drawPoint(this.points[index], r)
+                }
+            },
+
+            drawPoint: function(point, r) {
                 let canvas = this.$refs.canvas;
                 let context = canvas.getContext("2d");
+                context.beginPath();
+                context.strokeStyle = point.hitNow ? 'green' : 'red';
+                context.fillStyle = point.hitNow ? 'green' : 'red';
 
-                this.$http.get(
-                    'http://localhost:8080/api/point?r=' + r,
-                    {
-                        headers: {
-                            'Authorization': 'Bearer ' + localStorage.getItem('token')
-                        }
-                    }
-                ).then(
-                    (response) => {
-                        for (index in response.body) {
-                            context.beginPath();
-                            context.strokeStyle = response.body[index].hit ? 'green' : 'red';
-                            context.fillStyle = response.body[index].hit ? 'green' : 'red';
+                context.arc(this.toOriginalX(point.x, r), this.toOriginalY(point.y, r), this.pointRadius, 0, 2 * Math.PI);
+                context.closePath();
+                context.fill();
+                context.stroke();
+            },
 
-                            context.arc(this.toOriginalX(response.body[index].x, r), this.toOriginalY(response.body[index].y, r), r, 0, 2 * Math.PI);
-                            context.closePath();
-                            context.fill();
-                            context.stroke();
-                        }
-                    },
-                    (error) => { }
-                );
+            clear: function() {
+                let canvas = this.$refs.canvas;
+                let context = canvas.getContext("2d");
+                context.clearRect(0, 0, canvas.width, canvas.height);
             },
 
             toOriginalX: function(computingX, R) {
@@ -194,13 +232,38 @@ Vue.component(
                 Y *= R;
             
                 return Y;
+            },
+
+            init: function(r, points) {
+                this.points = points;
+                this.$refs.canvas.width = this.$refs.canvas.offsetWidth;
+                this.$refs.canvas.height = this.$refs.canvas.offsetHeight;
+                this.draw(r);
+            },
+
+            redraw: function(r, points) {
+                this.points = points;
+                this.clear();
+                this.draw(r);
+            },
+
+            addPoint(e) {
+                if (!this.currentR) {
+                    this.warningR = 'Выберите радиус';
+                    return;
+                }
+
+                let canvas = e.target;
+
+                let originalX = e.pageX - canvas.offsetLeft;
+                let originalY = e.pageY - canvas.offsetTop;
+        
+                let x = String(this.toComputingX(originalX, this.currentR)).substring(0, 10);
+                let y = String(this.toComputingY(originalY, this.currentR)).substring(0, 10);
+                let r = this.currentR;
+
+                this.$emit('addpoint', { x: x, y: y, r: r });
             }
-        },
-        mounted: function() {
-            this.$refs.canvas.width = this.$refs.canvas.offsetWidth;
-            this.$refs.canvas.height = this.$refs.canvas.offsetHeight;
-            
-            this.draw();
         }
     }
 );
@@ -253,19 +316,18 @@ Vue.component(
                     <label class="parameter-header">R:</label>
                     <div class="parameter-container">
                         <label class="parameter-label">1</label>
-                        <input type="radio" value="1" v-model="r">
+                        <input type="radio" value="1" v-model="r" v-on:click="rChanged(1)">
 
                         <label class="parameter-label">2</label>
-                        <input type="radio" value="2" v-model="r">
+                        <input type="radio" value="2" v-model="r" v-on:click="rChanged(2)">
 
                         <label class="parameter-label">3</label>
-                        <input type="radio" value="3" v-model="r">
+                        <input type="radio" value="3" v-model="r" v-on:click="rChanged(3)">
                     </div>
                     <span v-show="warningR" class="default-warning">{{ warningR }}</span>
 
                     <div class="horisontal-centering-container button-container">
                         <button type="submit" class="submit-button" v-on:click="sendPoint">Отправить</button>
-                        <span v-show="status === 'Unknown'" class="default-warning">Произошла неизвестная ошибка, попробуйте отправить запрос позже</span>
                     </div>
                 </form>
             </div>
@@ -279,38 +341,17 @@ Vue.component(
 
                 warningX: '',
                 warningY: '',
-                warningR: '',
-
-                status: ''
+                warningR: ''
             }
         },
         methods: {
             sendPoint: function(e) {
                 e.preventDefault()
-                this.status = ''
                 if (this.validateForm()) {
                     return
                 }
-                this.$http.post(
-                    'http://localhost:8080/api/point', 
-                    {
-                        'x': this.x,
-                        'y': this.y,
-                        'r': this.r
-                    },
-                    {
-                        headers: {
-                            'Authorization': 'Bearer ' + localStorage.getItem('token')
-                        }
-                    }
-                ).then(
-                    (response) => {
-                        //draw new point
-                    },
-                    (error) => {
-                        this.status = 'Unknown'
-                    }
-                )
+                
+                this.$emit('addpoint', { x: this.x, y: this.y, r: this.r });
             },
             validateForm: function() {
                 this.warningX = this.generateWarningX();
@@ -341,6 +382,9 @@ Vue.component(
                     return 'R должен быть указан'
                 }
                 return ''
+            },
+            rChanged: function(r) {
+                this.$emit('rchanged', r);
             }
         }
     }
@@ -371,23 +415,7 @@ Vue.component(
                     </table>
                 </div>
             `,
-        data: function() {
-            return {
-                points: []
-            }
-        },
-        created: function() {
-            this.$http.get(
-                'http://localhost:8080/api/point?r=3',
-                {
-                    headers: {
-                        'Authorization': 'Bearer ' + localStorage.getItem('token')
-                    }
-                }
-            ).then(
-                (response) => { this.points = response.body },
-                (error) => { }
-            );
-        }
+
+        props: ["points"]
     }
 );

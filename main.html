@@ -14,11 +14,11 @@
         <default-header></default-header>
         
         <div>
-            <task-chart></task-chart>
-            <point-form></point-form>
+            <task-chart ref="chart" v-on:addpoint="addPoint" v-bind:current-r="currentR"></task-chart>
+            <point-form v-on:rchanged="rChanged" v-on:addpoint="addPoint"></point-form>
         </div>
 
-        <result-table></result-table>
+        <result-table v-bind:points="points"></result-table>
     </div>
 
     <script src="https://unpkg.com/vue"></script>
@@ -28,10 +28,71 @@
     <script>
         var app = new Vue({
             el: '#app',
+            data: function() {
+                return {
+                    points: [],
+                    currentR: ''
+                }
+            },
+            methods: {
+                rChanged: function(newR) {
+                    if (this.currentR === newR) {
+                        return;
+                    }
+                    this.currentR = newR;
+
+                    this.$http.get(
+                        'http://localhost:8080/api/point?r=' + newR,
+                        {
+                            headers: {
+                                'Authorization': 'Bearer ' + localStorage.getItem('token')
+                            }
+                        }
+                    ).then(
+                        (response) => {
+                            this.points = response.body;
+                            this.$refs.chart.redraw(this.currentR, this.points);
+                        },
+                        (error) => { }
+                    );
+                },
+                addPoint: function(point) {
+                    this.$http.post(
+                        'http://localhost:8080/api/point',
+                        point,
+                        {
+                            headers: {
+                                'Authorization': 'Bearer ' + localStorage.getItem('token')
+                            }
+                        }
+                    ).then(
+                        (response) => {
+                            this.$refs.chart.drawPoint(response.body, response.body.r);
+                            this.points.push(response.body);
+                        },
+                        (error) => {  }
+                    );
+                }
+            },
             created: function() {
                 if (!localStorage.getItem('token')) {
                     window.location.replace("./index.html")
                 }
+
+                this.$http.get(
+                    'http://localhost:8080/api/point?r=' + 3,
+                    {
+                        headers: {
+                            'Authorization': 'Bearer ' + localStorage.getItem('token')
+                        }
+                    }
+                ).then(
+                    (response) => {
+                        this.points = response.body;
+                        this.$refs.chart.init(3, this.points);
+                    },
+                    (error) => { }
+                );
             }
         })
     </script>

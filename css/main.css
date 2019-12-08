@@ -1,18 +1,6 @@
-.task-chart,
-.task-chart-image,
-.chart-box {
+.task-chart {
 	width: 330px;
 	height: 330px;
-}
-
-.chart-box {
-	display: inline-block;
-	overflow: hidden;
-}
-
-.task-chart {
-	position: relative;
-	bottom: 100%;
 }
 
 .parameter-container, .button-container {
