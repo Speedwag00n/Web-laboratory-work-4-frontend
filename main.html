@@ -16,6 +16,7 @@
         <div>
             <task-chart ref="chart" v-on:addpoint="addPoint" v-bind:current-r="currentR"></task-chart>
             <point-form v-on:rchanged="rChanged" v-on:addpoint="addPoint"></point-form>
+            <a class="default-link" v-on:click="logout">Вернуться на страницу авторизации</a>
         </div>
 
         <result-table v-bind:points="points"></result-table>
@@ -53,7 +54,11 @@
                             this.points = response.body;
                             this.$refs.chart.redraw(this.currentR, this.points);
                         },
-                        (error) => { }
+                        (error) => {
+                            if (error.status == 403) {
+                                this.returnToIndex();
+                            }
+                        }
                     );
                 },
                 addPoint: function(point) {
@@ -70,8 +75,36 @@
                             this.$refs.chart.drawPoint(response.body, response.body.r);
                             this.points.push(response.body);
                         },
-                        (error) => {  }
+                        (error) => { 
+                            if (error.status == 403) {
+                                this.returnToIndex();
+                            }
+                        }
                     );
+                },
+                logout: function() {
+                    this.$http.post(
+                        'http://localhost:8080/api/logout',
+                        {
+
+                        },
+                        {
+                            headers: {
+                                'Authorization': 'Bearer ' + localStorage.getItem('token')
+                            }
+                        }
+                    ).then(
+                        (response) => {
+                            this.returnToIndex();
+                        },
+                        (error) => {
+                            this.returnToIndex();
+                        }
+                    );
+                },
+                returnToIndex: function() {
+                    localStorage.removeItem('token');
+                    window.location.replace("./index.html")
                 }
             },
             created: function() {
@@ -91,7 +124,11 @@
                         this.points = response.body;
                         this.$refs.chart.init(3, this.points);
                     },
-                    (error) => { }
+                    (error) => {
+                        if (error.status == 403) {
+                            this.returnToIndex();
+                        }
+                    }
                 );
             }
         })
