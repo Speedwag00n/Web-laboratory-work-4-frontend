@@ -88,7 +88,7 @@ Vue.component(
                     {
                         'login': this.login,
                         'password': this.password,
-                    },
+                    }
                 ).then(
                     (response) => {
                         this.status = ''
@@ -169,7 +169,7 @@ Vue.component(
                     {
                         "login": this.login,
                         "password": this.password
-                    },
+                    }
                 ).then(
                     (response) => {
                         this.status = ''
