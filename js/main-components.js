@@ -245,6 +245,7 @@ Vue.component(
                 if (points != null) {
                     this.points = points;
                 }
+                this.warningR = '';
                 this.clear();
                 this.draw(r);
             },
