@@ -416,7 +416,7 @@ Vue.component(
             `
                 <div class="horizontal-centering-container">
                     <h1>История результатов</h1>
-                    <table class="result-table">
+                    <table class="result-table" v-bind:class="{empty: isEmpty}">
                         <tr>
                             <th>X</th>
                             <th>Y</th>
@@ -435,6 +435,11 @@ Vue.component(
                 </div>
             `,
 
-        props: ["points"]
+        props: ["points"],
+        computed: {
+            isEmpty: function() {
+                return this.points.length == 0;
+            }
+        }
     }
 );
