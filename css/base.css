@@ -70,6 +70,10 @@ h1{
     color: white;
 }
 
+.empty {
+    display: none !important;
+}
+
 .default-label{
     font-family: monospace;
     color: white;

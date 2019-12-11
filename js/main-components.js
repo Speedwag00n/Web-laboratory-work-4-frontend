@@ -261,8 +261,9 @@ Vue.component(
                 let originalX = e.pageX - canvas.offsetLeft;
                 let originalY = e.pageY - canvas.offsetTop;
         
-                let x = String(this.toComputingX(originalX, this.currentR)).substring(0, 10);
-                let y = String(this.toComputingY(originalY, this.currentR)).substring(0, 10);
+                let x = this.toComputingX(originalX, this.currentR).toFixed(5);
+                let y = this.toComputingY(originalY, this.currentR).toFixed(5);
+                
                 let r = this.currentR;
 
                 this.$emit('addpoint', { x: x, y: y, r: r });
